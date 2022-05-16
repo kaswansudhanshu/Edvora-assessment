@@ -163,6 +163,11 @@ button {
 .dropdown-content #states,
 .dropdown-content #cities {
   background: #303030;
+  border-radius: 10px;
   color: aliceblue;
   width: 100px;
+}
+
+.select-container {
+  background: #303030;
 }

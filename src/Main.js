@@ -14,6 +14,7 @@ export const Main = (props) => {
     states,
     cities,
     showFilters,
+    adjustFilter,
   } = props;
   const userStation = user.station_code;
   return (
@@ -53,8 +54,8 @@ export const Main = (props) => {
             Filter
           </button>
           <div id="myDropdown" className="dropdown-content">
-            <div>
-              <select id="states" name="states">
+            <div className="select-container">
+              <select id="states" name="states" onChange={adjustFilter}>
                 <option value="state">State</option>
                 {states.length !== 0
                   ? states.map((state, i) => {
@@ -66,7 +67,7 @@ export const Main = (props) => {
                     })
                   : ""}
               </select>
-              <select id="cities" name="cities">
+              <select id="cities" name="cities" onChange={adjustFilter}>
                 <option value="city">City</option>
                 {cities.length !== 0
                   ? cities.map((city, i) => {
