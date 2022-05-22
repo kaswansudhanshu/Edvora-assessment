@@ -116,7 +116,6 @@ button {
 .upcoming-rides,
 .nearest-rides {
   margin-top: 3rem;
-  /* position: absolute; */
   width: 100%;
 }
 .nearest-rides {
@@ -127,7 +126,6 @@ button {
   display: flex;
   column-gap: 1rem;
   align-self: start;
-  /* justify-self: flex-end; */
   right: 0;
   position: relative;
   flex: 0;
@@ -143,7 +141,6 @@ button {
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
-  /* position: relative; */
   display: inline-block;
 }
 
@@ -151,9 +148,8 @@ button {
 .dropdown-content {
   display: none;
   position: fixed;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  width: 100px;
+  border-radius: 10px;
   z-index: 10;
 }
 .show {
@@ -169,5 +165,5 @@ button {
 }
 
 .select-container {
-  background: #303030;
+  background: transparent;
 }

@@ -1,7 +1,8 @@
 import React from "react";
-import { PastRides } from "./PastRides";
-import { UpcomingRides } from "./UpcomingRides";
-import { NearestRides } from "./NearestRides";
+import { PastRides, UpcomingRides, NearestRides } from './index'
+// import { PastRides } from "./PastRides";
+// import { UpcomingRides } from "../UpcomingRides";
+// import { NearestRides } from "../NearestRides";
 
 export const Main = (props) => {
   const {

@@ -1,6 +1,7 @@
 import React from "react";
-import { Header } from "./Header";
-import { Main } from "./Main";
+import { Header, Main } from "./index";
+// import { Header } from "./Header";
+// import { Main } from "./Main";
 
 class App extends React.Component {
   constructor() {
@@ -39,30 +40,33 @@ class App extends React.Component {
           }
         });
 
-        const presentDate = new Date();
+        // const presentDate = new Date();
         const userStation = user.station_code;
-        const upcomingRides = rides.filter((ride) => {
-          const rideDate = new Date(ride.date);
-          return presentDate.getTime() < rideDate.getTime();
-        });
-        const pastRides = rides.filter((ride) => {
-          const rideDate = new Date(ride.date);
-          return presentDate.getTime() >= rideDate.getTime();
-        });
-        const nearestRides = rides.filter((ride) => {
-          let val = false;
-          for (let i = 0; i < ride.station_path.length; i++) {
-            if (
-              (ride.station_path[i] - userStation <= 2 &&
-                ride.station_path[i] - userStation >= -2) ||
-              (ride.destination_station_code <= 2 &&
-                ride.destination_station_code >= -2)
-            )
-              val = true;
-            break;
-          }
-          return val;
-        });
+        const upcomingRides = this.getUpcomingRides(rides);
+        // rides.filter((ride) => {
+        //   const rideDate = new Date(ride.date);
+        //   return presentDate.getTime() < rideDate.getTime();
+        // });
+        const pastRides = this.getPastRides(rides);
+        //  rides.filter((ride) => {
+        //   const rideDate = new Date(ride.date);
+        //   return presentDate.getTime() >= rideDate.getTime();
+        // });
+        const nearestRides = this.getNearestRides(rides, userStation);
+        // rides.filter((ride) => {
+        //   let val = false;
+        //   for (let i = 0; i < ride.station_path.length; i++) {
+        //     if (
+        //       (ride.station_path[i] - userStation <= 2 &&
+        //         ride.station_path[i] - userStation >= -2) ||
+        //       (ride.destination_station_code <= 2 &&
+        //         ride.destination_station_code >= -2)
+        //     )
+        //       val = true;
+        //     break;
+        //   }
+        //   return val;
+        // });
         this.setState({
           user,
           rides,
@@ -76,25 +80,71 @@ class App extends React.Component {
     }.bind(this)());
   }
 
+  getUpcomingRides = (rides) => {
+    const presentDate = new Date();
+    const upcomingRides = rides.filter((ride) => {
+      const rideDate = new Date(ride.date);
+      return presentDate.getTime() < rideDate.getTime();
+    });
+    return upcomingRides;
+  };
+
+  getPastRides = (rides) => {
+    const presentDate = new Date();
+    const pastRides = rides.filter((ride) => {
+      const rideDate = new Date(ride.date);
+      return presentDate.getTime() >= rideDate.getTime();
+    });
+
+    return pastRides;
+  };
+
+  getNearestRides = (rides, userStation) => {
+    const nearestRides = rides.filter((ride) => {
+      let val = false;
+      for (let i = 0; i < ride.station_path.length; i++) {
+        if (
+          (ride.station_path[i] - userStation <= 2 &&
+            ride.station_path[i] - userStation >= -2) ||
+          (ride.destination_station_code <= 2 &&
+            ride.destination_station_code >= -2)
+        )
+          val = true;
+        break;
+      }
+      return val;
+    });
+    return nearestRides;
+  };
+
   showFilters = () => {
     document.getElementById("myDropdown").classList.toggle("show");
   };
 
   adjustFilter = () => {
-    const { pastRides, upcomingRides, nearestRides } = this.state;
+    // const { pastRides, upcomingRides, nearestRides } = this.state;
+    const { rides, user } = this.state;
+    const userStation = user.station_code;
+
     const filterState = document.getElementById("states").value;
     const filterCity = document.getElementById("cities").value;
+
+    const pastRides = this.getPastRides(rides);
+    const upcomingRides = this.getUpcomingRides(rides);
+    const nearestRides = this.getNearestRides(rides, userStation);
 
     if (filterState !== "state" && filterCity !== "city") {
       const pastRidesStateCity = pastRides.filter((ride) => {
         return ride.state === filterState && ride.city === filterCity;
       });
+
       const upcomingRidesStateCity =
         upcomingRides.length !== 0
           ? upcomingRides.filter((ride) => {
               return ride.state === filterState && ride.city === filterCity;
             })
           : "";
+
       const nearestRidesStateCity =
         nearestRides.length !== 0
           ? nearestRides.filter((ride) => {
@@ -153,37 +203,7 @@ class App extends React.Component {
       });
     }
     if (filterState === "state" && filterCity === "city") {
-      this.defaultFilter();
-    }
-  };
-
-  defaultFilter = () => {
-    const { rides, user } = this.state;
-    if (rides) {
-      const presentDate = new Date();
-      const userStation = user.station_code;
-      const upcomingRides = rides.filter((ride) => {
-        const rideDate = new Date(ride.date);
-        return presentDate.getTime() < rideDate.getTime();
-      });
-      const pastRides = rides.filter((ride) => {
-        const rideDate = new Date(ride.date);
-        return presentDate.getTime() >= rideDate.getTime();
-      });
-      const nearestRides = rides.filter((ride) => {
-        let val = false;
-        for (let i = 0; i < ride.station_path.length; i++) {
-          if (
-            (ride.station_path[i] - userStation <= 2 &&
-              ride.station_path[i] - userStation >= -2) ||
-            (ride.destination_station_code <= 2 &&
-              ride.destination_station_code >= -2)
-          )
-            val = true;
-          break;
-        }
-        return val;
-      });
+      // this.defaultFilter();
       this.setState({
         upcomingRides,
         pastRides,
@@ -191,6 +211,41 @@ class App extends React.Component {
       });
     }
   };
+
+  // defaultFilter = () => {
+  //   const { rides, user } = this.state;
+  //   if (rides) {
+  //     const presentDate = new Date();
+  //     const userStation = user.station_code;
+  //     const upcomingRides = rides.filter((ride) => {
+  //       const rideDate = new Date(ride.date);
+  //       return presentDate.getTime() < rideDate.getTime();
+  //     });
+  //     const pastRides = rides.filter((ride) => {
+  //       const rideDate = new Date(ride.date);
+  //       return presentDate.getTime() >= rideDate.getTime();
+  //     });
+  //     const nearestRides = rides.filter((ride) => {
+  //       let val = false;
+  //       for (let i = 0; i < ride.station_path.length; i++) {
+  //         if (
+  //           (ride.station_path[i] - userStation <= 2 &&
+  //             ride.station_path[i] - userStation >= -2) ||
+  //           (ride.destination_station_code <= 2 &&
+  //             ride.destination_station_code >= -2)
+  //         )
+  //           val = true;
+  //         break;
+  //       }
+  //       return val;
+  //     });
+  //     this.setState({
+  //       upcomingRides,
+  //       pastRides,
+  //       nearestRides,
+  //     });
+  //   }
+  // };
 
   changeSection = (id) => {
     this.setState({
